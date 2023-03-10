@@ -35,7 +35,7 @@ export class TabLayoutComponent implements OnInit, OnDestroy {
       }
 
       //prepare data for live games section
-      if(typeof this.messageList[1] !== 'undefined') {
+      if(typeof this.messageList[1] !== 'undefined' && this.messageList.length <= 2) {
         const listOfAllGames = this.messageList.at(1)
         const games: string[] = JSON.parse(JSON.stringify(listOfAllGames))
 
@@ -62,14 +62,38 @@ export class TabLayoutComponent implements OnInit, OnDestroy {
         });
 
         this.listOfGames = onGoingGames.concat(endedGames, gamesNotStarted)
+      }
+    })
 
-       /* console.log(message)
-        if(typeof this.parseJsonData(message).gameState !== 'undefined') {
-          const gameIdFromCurrentEvent = this.parseJsonData(message).gameState.id
-          const foundElement = this.listOfGames.filter((elem) => elem.id === 2);
-          console.log(gameIdFromCurrentEvent)
-        }*/
+    this.socketService.getGamesList().subscribe((message: string) => {
+      if (message.length !== 0) {
+        const games: string[] = JSON.parse(JSON.stringify(message))
 
+        let onGoingGames = games.filter((game) => this.parseJsonData(game).isStarted === true && this.parseJsonData(game).isEnded === false);
+        onGoingGames = onGoingGames.sort((a, b) => {
+          const dateA = new Date(this.parseJsonData(a).startTime);
+          const dateB = new Date(this.parseJsonData(b).startTime);
+          return dateA.getTime() - dateB.getTime();
+        });
+
+
+        let endedGames = games.filter((game) => this.parseJsonData(game).isStarted === true && this.parseJsonData(game).isEnded === true);
+        endedGames = endedGames.sort((a, b) => {
+          const dateA = new Date(this.parseJsonData(a).startTime);
+          const dateB = new Date(this.parseJsonData(b).startTime);
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        let gamesNotStarted = games.filter((game) => this.parseJsonData(game).isStarted === false && this.parseJsonData(game).isEnded === false);
+        gamesNotStarted = gamesNotStarted.sort((a, b) => {
+          const dateA = new Date(this.parseJsonData(a).startTime);
+          const dateB = new Date(this.parseJsonData(b).startTime);
+          return dateA.getTime() - dateB.getTime();
+        });
+
+        //this.listOfGames = onGoingGames.concat(endedGames, gamesNotStarted)
+        this.listOfGames = onGoingGames.concat(endedGames, gamesNotStarted)
+        console.log(this.listOfGames)
       }
     })
   }

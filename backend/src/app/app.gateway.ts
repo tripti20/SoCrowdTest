@@ -49,7 +49,7 @@ export class AppGateway
      */
     const doGameEvents = () => {
       for (const game of this.gamesService.games.filter((game: Game) => {
-        return !game.ended() && game.started();
+        return game.isEnded == false && game.isStarted == true;
       })) {
         const randomUpdate = this.gamesService.generateRandomGameUpdate(game);
 
@@ -122,6 +122,7 @@ export class AppGateway
   private broadcast(payload: any) {
     for (const client of this.clientList) {
       client.emit('scoreRoom', payload);
+      client.emit('gamesList', this.gamesService.games);
     }
   }
 }

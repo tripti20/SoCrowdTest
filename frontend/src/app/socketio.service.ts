@@ -9,6 +9,7 @@ import {BehaviorSubject} from "rxjs";
 export class SocketioService {
 
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
+  public gameList: BehaviorSubject<string> = new BehaviorSubject('');
   socket: Socket
   constructor() {
     this.socket = io(environment.SOCKET_ENDPOINT,  { transports: ["websocket"]});
@@ -19,6 +20,13 @@ export class SocketioService {
       this.message$.next(message);
     });
     return this.message$.asObservable();
+  };
+
+  public getGamesList = () => {
+    this.socket.on('gamesList', (message) =>{
+      this.gameList.next(message);
+    });
+    return this.gameList.asObservable();
   };
 
   public disconnect() {

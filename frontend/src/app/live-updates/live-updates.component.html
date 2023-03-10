@@ -1,0 +1,32 @@
+<div class="h-screen">
+  <div class="bg-slate-100 p-2 my-3 mx-5 rounded-lg shadow-lg shadow-slate-500" *ngFor="let item of receivedMessages">
+    <div class="flex items-center place-content-between flex-col sm:flex-row">
+      <div class="flex items-center flex-col sm:flex-row">
+        <div>
+          <img *ngIf="parseJsonData(item).type === 'score'" src="assets/score.png" alt="score" width="18" height="18">
+          <img *ngIf="parseJsonData(item).type === 'extraTime'" src="assets/extra-time.png" alt="score" width="18" height="18">
+          <img *ngIf="parseJsonData(item).type === 'gameStart'" src="assets/start.png" alt="score" width="18" height="18">
+          <img *ngIf="parseJsonData(item).type === 'gameEnd'" src="assets/stopwatch.png" alt="score" width="18" height="18">
+        </div>
+        <div>
+          <p class="m-1 text-center" *ngIf="parseJsonData(item).type === 'score'">
+            Goal in {{parseJsonData(item).gameState.homeTeam}} vs {{parseJsonData(item).gameState.awayTeam}} at {{calculateInGameTime(parseJsonData(item).gameState.startTime, parseJsonData(item).timestamp)}} : New Score: {{parseJsonData(item).gameState.homeTeam}} {{parseJsonData(item).gameState.homeTeamScore}} - {{parseJsonData(item).gameState.awayTeamScore}} {{parseJsonData(item).gameState.awayTeam}}
+          </p>
+          <p class="m-1 text-center" *ngIf="parseJsonData(item).type === 'extraTime'">
+            Extra time added in {{parseJsonData(item).gameState.homeTeam}} vs {{parseJsonData(item).gameState.awayTeam}} at {{calculateInGameTime(parseJsonData(item).gameState.startTime, parseJsonData(item).timestamp)}} : Current Score: {{parseJsonData(item).gameState.homeTeam}} {{parseJsonData(item).gameState.homeTeamScore}} - {{parseJsonData(item).gameState.awayTeamScore}} {{parseJsonData(item).gameState.awayTeam}}
+          </p>
+          <p class="m-1 text-center" *ngIf="parseJsonData(item).type === 'gameStart'">
+            Game {{parseJsonData(item).gameState.homeTeam}} vs {{parseJsonData(item).gameState.awayTeam}} started
+          </p>
+          <p class="m-1 text-center" *ngIf="parseJsonData(item).type === 'gameEnd'">
+            Game {{parseJsonData(item).gameState.homeTeam}} vs {{parseJsonData(item).gameState.awayTeam}} ended {{parseJsonData(item).gameState.homeTeamScore}} - {{parseJsonData(item).gameState.awayTeamScore}} at {{calculateInGameTime(parseJsonData(item).gameState.startTime, parseJsonData(item).gameState.endTime)}}
+          </p>
+        </div>
+      </div>
+      <div>
+        <p class="m-1">{{parseDate(parseJsonData(item).timestamp)}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="h-5"></div>
+</div>

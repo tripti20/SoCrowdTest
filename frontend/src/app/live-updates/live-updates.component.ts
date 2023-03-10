@@ -1,5 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {SocketioService} from "../socketio.service";
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-live-updates',
@@ -7,12 +6,8 @@ import {SocketioService} from "../socketio.service";
   styleUrls: ['./live-updates.component.scss'],
 })
 export class LiveUpdatesComponent implements OnInit, OnDestroy {
-  messageList: string[] = [];
-  receivedMessages: string[] = []
 
-  constructor(
-    private socketService: SocketioService
-  ) { }
+  @Input() data: string[] = [];
 
   parseJsonData(json: string) {
     return JSON.parse(json);
@@ -43,19 +38,10 @@ export class LiveUpdatesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.socketService.getNewMessage().subscribe((message: string) => {
-      //save to master list
-      this.messageList.push(message);
-      //convert to json
-      const msg = JSON.parse(JSON.stringify(message))
-      const type = msg.type
-      if (typeof type !== "undefined" && (type === 'gameStart' || type === 'extraTime' || type === 'score' || type === 'gameEnd')) {
-        this.receivedMessages.unshift(JSON.stringify(msg))
-      }
-    })
+
   }
 
   ngOnDestroy() {
-    this.socketService.disconnect();
+
   }
 }

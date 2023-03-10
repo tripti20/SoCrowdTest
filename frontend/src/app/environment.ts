@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  SOCKET_ENDPOINT: 'http://172.24.128.197:3008'
+  SOCKET_ENDPOINT: 'http://localhost:3008'
 };

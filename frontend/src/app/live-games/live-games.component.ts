@@ -1,5 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {SocketioService} from "../socketio.service";
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {data} from "autoprefixer";
 
 @Component({
   selector: 'app-live-games',
@@ -8,18 +8,39 @@ import {SocketioService} from "../socketio.service";
 })
 export class LiveGamesComponent implements OnInit, OnDestroy {
 
-  constructor(
-    private socketService: SocketioService
-  ) { }
+  @Input() data: string[] = [];
+
+  constructor() { }
+
+  parseJsonData(json: string) {
+    return JSON.parse(JSON.stringify(json)); //object to string to json
+  }
+
+  calculateInGameTime(startDate : string) {
+    const currentTime = new Date();
+    const startTime = new Date(startDate);
+
+    const diffInMs = Math.abs(currentTime.getTime() - startTime.getTime()); // Get difference in milliseconds
+
+    // Convert milliseconds to minutes
+    return Math.floor(diffInMs / (1000 * 60))
+  }
+
+  calculateTotalGameTime(startDate : string, currentDate : string) {
+    const currentTime = new Date(currentDate);
+    const startTime = new Date(startDate);
+
+    const diffInMs = Math.abs(currentTime.getTime() - startTime.getTime()); // Get difference in milliseconds
+
+    // Convert milliseconds to minutes
+    return Math.floor(diffInMs / (1000 * 60))
+  }
 
   ngOnInit(): void {
-    this.socketService.getNewMessage().subscribe((message: string) => {
-      console.log(message)
-    })
+   //console.log(data)
   }
 
   ngOnDestroy() {
-    this.socketService.disconnect();
-  }
 
+  }
 }

@@ -1,10 +1,40 @@
-<div class="live-games h-screen">
-  <mat-grid-list cols="5" rowHeight="5:3" gutterSize="10px">
-    <mat-grid-tile>1</mat-grid-tile>
-    <mat-grid-tile>2</mat-grid-tile>
-    <mat-grid-tile>3</mat-grid-tile>
-    <mat-grid-tile>4</mat-grid-tile>
-    <mat-grid-tile>5</mat-grid-tile>
-    <mat-grid-tile >6</mat-grid-tile>
-  </mat-grid-list>
+<div class="m-4 h-screen">
+  <div class="grid gap-4 grid-cols-5">
+    <div *ngFor="let item of data" class="rounded-lg shadow-lg shadow-slate-500">
+      <!--On Going-->
+      <div *ngIf="parseJsonData(item).isStarted === true && parseJsonData(item).isEnded === false" class="h-full w-full p-3 bg-green-600 rounded-lg">
+        <div class="flex flex-col items-center p-3">
+          <img class="m-1" src="assets/score.png" alt="score" width="28" height="28">
+          <p class="m-1">In Game</p>
+          <p class="text-2xl">{{parseJsonData(item).homeTeam}} {{parseJsonData(item).homeTeamScore}} : {{parseJsonData(item).awayTeamScore}} {{parseJsonData(item).awayTeam}}</p>
+          <span class="py-2 px-5 bg-green-700 rounded-full text-xl">
+            {{calculateInGameTime(parseJsonData(item).startTime)}}'
+          </span>
+        </div>
+      </div>
+      <!--Ended-->
+      <div *ngIf="parseJsonData(item).isStarted === true && parseJsonData(item).isEnded === true" class="h-full w-full p-3 bg-fuchsia-800 rounded-lg">
+        <div class="flex flex-col items-center p-3">
+          <img class="m-1" src="assets/stopwatch.png" alt="score" width="28" height="28">
+          <p class="m-1">Ended</p>
+          <p class="text-2xl">{{parseJsonData(item).homeTeam}} {{parseJsonData(item).homeTeamScore}} : {{parseJsonData(item).awayTeamScore}} {{parseJsonData(item).awayTeam}}</p>
+          <span class="py-2 px-5 bg-fuchsia-900 rounded-full text-xl">
+            {{calculateTotalGameTime(parseJsonData(item).startTime, parseJsonData(item).endTime)}}'
+          </span>
+        </div>
+      </div>
+      <!--Not Started-->
+      <div *ngIf="parseJsonData(item).isStarted === false && parseJsonData(item).isEnded === false" class="h-full w-full p-3 bg-purple-800 rounded-lg">
+        <div class="flex flex-col items-center p-3">
+          <img class="m-1" src="assets/timer.png" alt="score" width="28" height="28">
+          <p class="m-1">About to Start</p>
+          <p class="text-2xl">{{parseJsonData(item).homeTeam}} {{parseJsonData(item).homeTeamScore}} : {{parseJsonData(item).awayTeamScore}} {{parseJsonData(item).awayTeam}}</p>
+          <span class="py-2 px-5 bg-purple-900 rounded-full text-xl">
+            00'
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="h-5"></div>
 </div>
